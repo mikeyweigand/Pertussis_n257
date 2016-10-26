@@ -1,7 +1,5 @@
 ## This is a set of basic scripts for analyzing genomic data, particularly rearrangements.
-Scripts do not include novel algorthms or applications, but are developed to mediate analysis workflows using other freely-available software as described.  
-
-Scripts are mostly written in Perl, though probably not that well. All Scripts include brief documentation, accessible by passing no parameters.  
+Scripts do not include novel algorthms or applications, but are developed to mediate analysis workflows using other freely-available software as described. Everything is written in Perl, though probably not that well. All Scripts include brief documentation, accessible by passing no parameters.  
 
 
 ### Included Analysis Workflows:  
