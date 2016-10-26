@@ -4,7 +4,7 @@ Scripts do not include novel algorthms or applications, but are developed to med
 
 ### Included Analysis Workflows:  
 As described in __Weigand *et al.* 201X__:  
-1. __WORKFLOW-REARRANGEMENTS.md__: Characterize genome rearrangements in complete assemblies.
+1. __WORKFLOW-REARRANGEMENTS.md__: Characterize genome rearrangements in complete assemblies.  
 1. __WORKFLOW-IS481.md__: Match variable IS481 insertions in a set of genomes.
 
 ### Disclaimer
