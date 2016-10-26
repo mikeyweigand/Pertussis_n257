@@ -1,5 +1,5 @@
 ## Workflow for matching variable IS481 insertions:  
-As described in __Weigand *et al.* 2016__  
+As described in __Weigand *et al.* 201X__  
 
 1. Exhaustive pairwise alignment of genomes with progressiveMauve ([Darling *et al.* 2010](http://www.ncbi.nlm.nih.gov/pubmed/20593022)).
 1. [BLASTn](http://www.ncbi.nlm.nih.gov/books/NBK279671/) search of IS481 ([M22031](http://www.ncbi.nlm.nih.gov/nuccore/144060/)) insertions in each genome.  
