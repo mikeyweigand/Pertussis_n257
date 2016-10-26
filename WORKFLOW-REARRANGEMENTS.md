@@ -1,6 +1,5 @@
 ## Workflow for rearrangement analysis:  
-For characterizing genome rearrangements in complete assemblies.  
-As described in __Weigand *et al.* 201X__  
+For characterizing genome rearrangements in complete assemblies as described in __Weigand *et al.* 201X__  
 
 1. Multiple genome alignment with __progressiveMauve__ ([Darling *et al.* 2010](http://www.ncbi.nlm.nih.gov/pubmed/20593022))  
   * Align a non-redundant subset of genomes, representing each unique architecture (predetermined).  
