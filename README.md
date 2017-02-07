@@ -1,7 +1,7 @@
 ## This is a set of basic scripts for analyzing genomic data, particularly rearrangements.
 Scripts do not include novel algorthms or applications, but are developed to mediate analysis workflows using other freely-available software as described. Everything is written in Perl, though probably not that well. All scripts include brief documentation, accessible by passing no parameters. Separate versions of the workflows are available in these directories:
 1. __Weigand_JBact2007/__ -- versions used for __[Weigand *et al.* 2017](http://jb.asm.org/content/early/2017/02/02/JB.00806-16.abstract)__.  
-1. __Current/__ -- copy of active versions in use with subsequent projects.  
+2. __Current/__ -- copy of active versions in use with subsequent projects.  
 
 ---
 ### Included Analysis Workflows:  
