@@ -1,9 +1,9 @@
 ## Workflow for matching variable IS481 insertions:  
-For matching variable IS481 insertions in a set of genomes as described in __Weigand *et al.* 201X__  
+For matching variable IS481 insertions in a set of genomes as described in __[Weigand *et al.* 2017](http://jb.asm.org/content/early/2017/02/02/JB.00806-16.abstract)__  
 
 1. Exhaustive pairwise alignment of genomes with progressiveMauve ([Darling *et al.* 2010](http://www.ncbi.nlm.nih.gov/pubmed/20593022)).  
 2. [BLASTn](http://www.ncbi.nlm.nih.gov/books/NBK279671/) search of IS481 ([M22031](http://www.ncbi.nlm.nih.gov/nuccore/144060/)) insertions in each genome.  
-  * Use: -outfmt '6 qseqid sseqid qlen length qstart qend sstart send'
+  * Use: `-outfmt '6 qseqid sseqid qlen length qstart qend sstart send'` 
 3. Match IS481 insertions between genomes in each pairwise alignment.  
   * __mauve.backbone-IStracker.pl__
 4. Convert IS matrices to rbm format.  
