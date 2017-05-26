@@ -65,7 +65,7 @@ unless($check){
 		unless($quiet){ print "\n" . ($g+1) ."/".$total."\t". $genomes[$g]." vs ". $tmp."/".$tmpfile." (n=".scalar(@gen2).")\n"};
 
 		#run parallel alignments
-		system(" src/pairwise-mauve-parallel.sh $genomes[$g] $tmp/$tmpfile $dir");
+		system(" /home/yrh8/Documents/Pertussis_n257/Current/pairwise-mauve-parallel.sh $genomes[$g] $tmp/$tmpfile $dir");
 
 	}
 	unless($quiet){print "Done!\n\n"};
