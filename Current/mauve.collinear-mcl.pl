@@ -84,11 +84,12 @@ if($plot){
 	my@v = @hash{@k};
 	#my$plotout = basename($out, "txt")."png";
 	my$plotout = $out;
-	$plotout =~ s/txt$/png/;
+	$plotout =~ s/txt$/pdf/;
 	my$R = Statistics::R->new();
 	$R->set('counts', \@v );
 	$R->set('groups', \@k );
-	$R->run( qq' png("$plotout",width=800,height=480) ');
+	#$R->run( qq' png("$plotout",width=800,height=480) ');
+	$R->run( qq' pdf("$plotout") ');
 	$R->run( qq' barplot(counts, names.arg = groups,ylab="Number of genomes",main = "$out",las=2) ');
 	$R->run( qq' dev.off() ' );
 }
@@ -111,7 +112,7 @@ sub HELP_MESSAGE { die "
    [mandatory]
 	 -in	<in.txt>	Concatenated output from 'mauve.collinear-check.pl'.
 	 			(Tab-separated format: GenomeA GenomeB [gaps] [inversions])
-	 -out	<out.txt>	Output file of clusters from MCL.
+	 -out	<out.txt>	Output file of clusters from MCL (must end in '.txt').
 
    [optional]
 	 -q	Run quietly.

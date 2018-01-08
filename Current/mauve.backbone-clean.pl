@@ -8,6 +8,7 @@ use Bio::SeqIO;
 		'query=s' => \my$query,		#
 		'q' => \my$quiet,
 		'h' => \my$h,
+		'pdl' => \my$pdlids,
 		'genomes=s' => \my$genomes,
 		'out=s' => \my$out);		#
 ($backbone and $query and $genomes and $out) or &HELP_MESSAGE;
@@ -15,9 +16,10 @@ if($h){ &HELP_MESSAGE };
 
 my$inname= basename($backbone, ".xmfa.backbone");
 my@ids = split("-",$inname);
-my$genomeA = &getgrep( $ids[0], $genomes);
-my$genomeB = &getgrep( $ids[1], $genomes);
-
+#print join("\t",@ids)	."\n";
+my$genomeA = &getgrep( $ids[0], $genomes, $pdlids);
+my$genomeB = &getgrep( $ids[1], $genomes, $pdlids);
+#print join("\n",($genomeA,$genomeB))."\n";
 my$clean=0;
 
 open BB, "$backbone";
@@ -85,8 +87,13 @@ sub doblast {
 }
 
 sub getgrep {
-	my($pdl) = $_[0] =~ /([A-Z][0-9]{3})/;
-	my$match = qx( grep $pdl $_[1] );
+	my$match='';
+	if($_[2]){
+		my($pdl) = $_[0] =~ /([A-Z][0-9]{3})/;
+		$match = qx( grep $pdl $_[1] );
+	}else{
+		$match = qx( grep $_[0] $_[1] );
+	}
 	chomp$match;
 	return( &checkfasta($match) );
 }
@@ -96,7 +103,9 @@ sub checkfasta {
 		return ($_[0]);
 	}else{ #convert genbank to temp fasta for blasting
 		my$gbk = Bio::SeqIO->new(-file => "$_[0]", -format => 'genbank');
-		my$tempfasta = basename($_[0],".gbk"). ".tmp.fasta";
+		my$stamp = qx( date +%H%M%S%N );
+		chomp$stamp;
+		my$tempfasta = basename($_[0],".gbk").".".$stamp.".tmp.fasta";
 		my$out = Bio::SeqIO->new(-file => ">$tempfasta", -format => 'fasta');
 		while(my$seq = $gbk->next_seq){
 			$out->write_seq($seq);
@@ -122,6 +131,7 @@ sub HELP_MESSAGE { die "
 
 
    [optional]
+	 -pdl	Recognize PDL strain ID's only (eg. A123). Default is any format.
 	 -q		Run quietly.
 	 -h		This help message.
 
