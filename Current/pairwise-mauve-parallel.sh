@@ -50,9 +50,9 @@ function collinear {
 
 	date > $log;
 	echo >> $log;
-#	~/Tools/mauve_2.4.0b/linux-x64/progressiveMauve --output=$out --seed-weight=16 --hmm-identity=0.85 $td/$(basename $1) $td/$(basename $2) >> $log;
-  ~/Tools/mauve_2.4.0b/linux-x64/progressiveMauve --output=$out --seed-weight=$3 --hmm-identity=$4 $td/$(basename $1) $td/$(basename $2) >> $log;
-
+  #~/Tools/mauve_2.4.0b/linux-x64/progressiveMauve --output=$out --seed-weight=16 --hmm-identity=0.85 $td/$(basename $1) $td/$(basename $2) >> $log;
+  ~/Tools/mauve_2.4.0b/linux-x64/progressiveMauve --output=$out --seed-weight=$4 --hmm-identity=$5 $td/$(basename $1) $td/$(basename $2) >> $log;
+  #echo ~/Tools/mauve_2.4.0b/linux-x64/progressiveMauve --output=$out --seed-weight=$4 --hmm-identity=$5 $td/$(basename $1) $td/$(basename $2) >> $log;
 
   #correct file paths in xmfa
   prev1="$td/$(basename $1)";
@@ -78,7 +78,7 @@ if [ ! -d "$outdir" ]; then
 fi
 	mapfile -t refs < $reflist;
 	#parallel -j 12 -k echo $genome {} $outdir ::: ${refs[@]};
-	parallel -j 12 -k collinear $genome {} $outdir ::: ${refs[@]};
+	parallel -j 12 -k collinear $genome {} $outdir $4 $5 ::: ${refs[@]};
 #else
 #	echo -e "\nERROR: Directory '$outdir' already exists!\n";
 #fi

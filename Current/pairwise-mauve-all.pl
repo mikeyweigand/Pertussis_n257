@@ -83,7 +83,7 @@ unless($check){
 
 		#run parallel alignments
 		system(" /home/yrh8/Documents/Pertussis_n257/Current/pairwise-mauve-parallel.sh $genomes[$g] $tmp/$tmpfile $dir $seed $hmm");
-
+		#system(" echo $genomes[$g] $tmp/$tmpfile $dir $seed $hmm");
 	}
 	unless($quiet){print "Done!\n\n"};
 }
