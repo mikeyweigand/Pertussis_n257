@@ -4,12 +4,14 @@ if [[ "$1" == "" || "$1" == "-h" || "$1" == "-help" ]] ; then
    echo "
    This script will align a query genome with each reference genome in a list, individually, by many parallel runs of progressiveMauve.
 
-   Usage: ./colinear-test-parallel.sh [query] [ref-list] [out-dir]
+   Usage: ./colinear-test-parallel.sh [query] [ref-list] [out-dir] [sw] [hmm]
 
    [mandatory]
    query	A closed genome sequence in Genbank(.gbk) or Fasta(.fasta) format.
    ref-list	List of paths to set of reference genomes in Genbank(.gbk) or Fasta(.fasta) format.
    out-dir	Path to the new output dir
+   sw   value of --seed-weight parameter to progressiveMauve
+   hmm  value of --hmm-identity parameter to pprogressiveMauve
 
    [dependencies]
    progressiveMauve
@@ -48,7 +50,9 @@ function collinear {
 
 	date > $log;
 	echo >> $log;
-	~/Tools/mauve_2.4.0b/linux-x64/progressiveMauve --output=$out --seed-weight=16 --hmm-identity=0.85 $td/$(basename $1) $td/$(basename $2) >> $log;
+#	~/Tools/mauve_2.4.0b/linux-x64/progressiveMauve --output=$out --seed-weight=16 --hmm-identity=0.85 $td/$(basename $1) $td/$(basename $2) >> $log;
+  ~/Tools/mauve_2.4.0b/linux-x64/progressiveMauve --output=$out --seed-weight=$3 --hmm-identity=$4 $td/$(basename $1) $td/$(basename $2) >> $log;
+
 
   #correct file paths in xmfa
   prev1="$td/$(basename $1)";

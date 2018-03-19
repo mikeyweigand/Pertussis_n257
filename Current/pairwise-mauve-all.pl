@@ -8,10 +8,26 @@ use File::Basename;
 		'h' => \my$h,
 		'help' => \my$help,
 		'tmp=s' => \my$tmp,
+		'sw=s' => \my$seed,
+		'hmm=s' => \my$hmm,
 		'check' => \my$check,
 		'dir=s' => \my$dir);		#
 ($glist and $tmp and $dir) or &HELP_MESSAGE;
 if($help or $h){ &HELP_MESSAGE};
+
+#Default parameters for progressiveMauve
+$seed ||= 16;
+$hmm ||= 0.85;
+
+
+unless( $seed =~  /^\d+\z/ ){
+	print "\n\tERROR: Your seed-weight parameter ('$seed') doesn't look right, try a whole unber liked '16'\n";
+	&HELP_MESSAGE;
+}
+unless( $hmm =~ /^[+-]?(?=\.?\d)\d*\.?\d*(?:e[+-]?\d+)?\z/i && $hmm < 1){
+	print "\n\tERROR: Your hmm-identity parameter ('$hmm') doesn't look right, try a float liked '0.85'\n";
+	&HELP_MESSAGE;
+}
 
 #read input list
 my@genomes = ();
@@ -40,6 +56,7 @@ if($check){
 	print "Found ".$found."/".scalar(@genomes)." files listed in '$glist'.\n";
 	if( -d "$tmp"){print "WARNING: The directory '$tmp' already exists.\n"};
 	if( -d "$dir"){print "WARNING: The directory '$dir' already exists.\n"};
+	print "progressiveMauve paramters: --seed-weight=$seed,  --hmm-identity=$hmm\n";
 	print "Total number of alignments = $numalign. No alignments were run.\n";
 }
 
@@ -65,7 +82,7 @@ unless($check){
 		unless($quiet){ print "\n" . ($g+1) ."/".$total."\t". $genomes[$g]." vs ". $tmp."/".$tmpfile." (n=".scalar(@gen2).")\n"};
 
 		#run parallel alignments
-		system(" /home/yrh8/Documents/Pertussis_n257/Current/pairwise-mauve-parallel.sh $genomes[$g] $tmp/$tmpfile $dir");
+		system(" /home/yrh8/Documents/Pertussis_n257/Current/pairwise-mauve-parallel.sh $genomes[$g] $tmp/$tmpfile $dir $seed $hmm");
 
 	}
 	unless($quiet){print "Done!\n\n"};
@@ -93,6 +110,8 @@ sub HELP_MESSAGE { die "
 
    [optional]
 	 -q	Run quietly.
+	 -sw	Value of progressiveMauve '--seed-weight' parameter (Default = 16)
+	 -hmm	Value of progressiveMauve '-hmm-identity' parameter (Default = 0.85)
 	 -check	Checks that all listed genome files and output directories exist without running alignments.
 
    [dependencies]
