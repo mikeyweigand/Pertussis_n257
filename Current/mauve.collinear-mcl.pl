@@ -6,11 +6,13 @@ use Statistics::R;
 
 #Default MCL parameters
 my$inflation=2;
+my$mclte=1;
 
 &GetOptions(	'in=s' => \my$check,		#
 		'q' => \my$quiet,
 		'S' => \my$singletons,
 		'I=s' => \$inflation,
+		'te=s' => \$mclte,
 		'plot' => \my$plot,
 		'out=s' => \my$out);		#
 ($check and $out) or &HELP_MESSAGE;
@@ -31,9 +33,9 @@ close CHECK;
 close TMP;
 #cluster matches using mcl
 if($quiet){
-	system( "mcl mcl-input.tmp -V all --abc -I $inflation -o mcl-output.tmp");
+	system( "mcl mcl-input.tmp -V all --abc -I $inflation -te $mclte -o mcl-output.tmp");
 }else{
-	system( "mcl mcl-input.tmp --abc -I $inflation -o mcl-output.tmp");
+	system( "mcl mcl-input.tmp --abc -I $inflation -te $mclte -o mcl-output.tmp");
 }
 
 #add cluster names and counts
@@ -117,8 +119,9 @@ sub HELP_MESSAGE { die "
    [optional]
 	 -q	Run quietly.
 	 -I	Set MCL 'inflation' parameter (default = 2.0).
+	 -te	Set number of threads for MCL (default = 1).
 	 -S	Append 'singletons' to end of MCL cluster list (excluded by default).
-	 -plot Draw a barplot of cluster abundances.
+	 -plot	Draw a barplot of cluster abundances.
 
    [dependencies]
 	 MCL	(http://www.micans.org/mcl/).
