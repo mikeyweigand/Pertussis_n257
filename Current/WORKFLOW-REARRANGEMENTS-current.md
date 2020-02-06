@@ -23,3 +23,4 @@
 NOTES and WARNINGS:
 + The expected input for this workflow is a collection of complete (1-contig) bacterial genome assemblies, each saved in a separate fasta file. Intermediate steps use filename parsing "GenomeA-GenomeB" and so the original fasta filenames must contain only [A-Za-z0-9_].
 + To date, these scripts have only been tested with *Bordetella* species and may require modification for use with other species.
++ As of Dec. 2019, cluster analysis and visualization of discrete chromosome structures using MLGO is instead performed using a network data structure. See [Weigand *et al.* 2019](https://msystems.asm.org/content/4/6/e00702-19) and the associated repo __Bordetella_species__ for details. 
