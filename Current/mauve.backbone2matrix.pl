@@ -45,10 +45,10 @@ while(my$bb = <BBONE>){
 		$hash{ $bnum } = 0;
 
 		for (my$ii=0; $ii < @sbb; $ii+=2){			## only pass blocks >minlen
-			if(abs($sbb[$ii]-$sbb[$ii+1]) >= $minlen){	
-				
+			if(abs($sbb[$ii]-$sbb[$ii+1]) >= $minlen){
+
 				my$blen = abs($sbb[$ii]-$sbb[$ii+1]);
-				
+
 				#count number of genomes containing block >= minlen
 				$hash{$bnum}++;
 				#store block coordinate information for each genome
@@ -59,13 +59,13 @@ while(my$bb = <BBONE>){
 		}
 		$bnum++;
 	}
-	
+
 }
 close BBONE;
 
 #exclude blocks present in less than minimum number of genomes
 foreach my$j (sort{$a <=> $b}(keys%hash)){
-	unless($hash{$j} >= $mingen){	
+	unless($hash{$j} >= $mingen){
 		delete($hash{$j});
 	}else{
 	#print $j."\n";
@@ -81,9 +81,10 @@ my@lengths=();
 foreach my$g2 (@genomes){
 	print MATRIX ">".$g2."\n";
 	my$glen=0;
-	foreach my$cc (sort{$a <=> $b}keys$ghash{$g2}){
+	#foreach my$cc (sort{$a <=> $b}keys$ghash{$g2}){
+	foreach my$cc (sort{$a <=> $b}keys%{$ghash{$g2}}){
 		if(exists($hash{ $ghash{$g2}{$cc}[0] } )){
-			
+
 			#if coordinates are negative, block is inverted (negative sign)
 			if( $ghash{$g2}{$cc}[1] >= 1){
 				print MATRIX $ghash{$g2}{$cc}[0] . " ";
@@ -130,15 +131,15 @@ print "\t\tPresent in at least $mingen genomes\n";
 print "\t\tWith length >= $minlen bp\n";
 print "\t\tWhich comprise at least $slengths[0] bp per genome\n\n";
 
-	
+
 sub HELP_MESSAGE { die "
 .Description:
    Extracts block coordinates from a progressiveMauve .backbone and .xmfa output file and generates:
    	(1) coordinate table, with block lengths
    	(2) signed permutation matrix for input to MLGO.
-   
+
 .Usage: $0 -backbone <*.backbone> -xmfa <*.xmfa> -num 5 -minlen 500 -out <prefix>
-   
+
    [mandatory options]
    -backbone	Input backbone alignment file.
    -xmfa	Input xmfa alignment file.
@@ -147,4 +148,3 @@ sub HELP_MESSAGE { die "
    -out		Filename prefix for output.
 
 " }
-

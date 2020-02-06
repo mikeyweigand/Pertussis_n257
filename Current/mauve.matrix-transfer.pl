@@ -73,7 +73,7 @@ sub HELP_MESSAGE { die "
    [mandatory options]
    -nr		Input permutation matrix of Non-redundant subset.
    -list	All genome files, with group/cluster definition. Tab-separated.
-   		Ex: CDC010	H806_CP000000.gbk
+   			Ex: CDC010	H806_CP000000.gbk
    -out		Filename of new output matrix.
 
 " }

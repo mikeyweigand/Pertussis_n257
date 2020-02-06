@@ -6,13 +6,11 @@ use Statistics::R;
 
 #Default MCL parameters
 my$inflation=2;
-my$mclte=1;
 
 &GetOptions(	'in=s' => \my$check,		#
 		'q' => \my$quiet,
 		'S' => \my$singletons,
 		'I=s' => \$inflation,
-		'te=s' => \$mclte,
 		'plot' => \my$plot,
 		'out=s' => \my$out);		#
 ($check and $out) or &HELP_MESSAGE;
@@ -33,9 +31,9 @@ close CHECK;
 close TMP;
 #cluster matches using mcl
 if($quiet){
-	system( "mcl mcl-input.tmp -V all --abc -I $inflation -te $mclte -o mcl-output.tmp");
+	system( "mcl mcl-input.tmp -V all --abc -I $inflation -o mcl-output.tmp");
 }else{
-	system( "mcl mcl-input.tmp --abc -I $inflation -te $mclte -o mcl-output.tmp");
+	system( "mcl mcl-input.tmp --abc -I $inflation -o mcl-output.tmp");
 }
 
 #add cluster names and counts
@@ -86,12 +84,11 @@ if($plot){
 	my@v = @hash{@k};
 	#my$plotout = basename($out, "txt")."png";
 	my$plotout = $out;
-	$plotout =~ s/txt$/pdf/;
+	$plotout =~ s/txt$/png/;
 	my$R = Statistics::R->new();
 	$R->set('counts', \@v );
 	$R->set('groups', \@k );
-	#$R->run( qq' png("$plotout",width=800,height=480) ');
-	$R->run( qq' pdf("$plotout") ');
+	$R->run( qq' png("$plotout",width=800,height=480) ');
 	$R->run( qq' barplot(counts, names.arg = groups,ylab="Number of genomes",main = "$out",las=2) ');
 	$R->run( qq' dev.off() ' );
 }
@@ -114,17 +111,16 @@ sub HELP_MESSAGE { die "
    [mandatory]
 	 -in	<in.txt>	Concatenated output from 'mauve.collinear-check.pl'.
 	 			(Tab-separated format: GenomeA GenomeB [gaps] [inversions])
-	 -out	<out.txt>	Output file of clusters from MCL (must end in '.txt').
+	 -out	<out.txt>	Output file of clusters from MCL.
 
    [optional]
 	 -q	Run quietly.
 	 -I	Set MCL 'inflation' parameter (default = 2.0).
-	 -te	Set number of threads for MCL (default = 1).
 	 -S	Append 'singletons' to end of MCL cluster list (excluded by default).
-	 -plot	Draw a barplot of cluster abundances.
+	 -plot	Draw a barplot of cluster abundances using R.
 
    [dependencies]
-	 MCL	(http://www.micans.org/mcl/).
-	 R
+	 MCL	(http://www.micans.org/mcl/, and must be in your \$PATH).
+	 R	(Statistics::R)
 
 " }

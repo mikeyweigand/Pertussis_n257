@@ -4,14 +4,15 @@ if [[ "$1" == "" || "$1" == "-h" || "$1" == "-help" ]] ; then
    echo "
    This script will align a query genome with each reference genome in a list, individually, by many parallel runs of progressiveMauve.
 
-   Usage: ./colinear-test-parallel.sh [query] [ref-list] [out-dir] [sw] [hmm]
+   Usage: ./colinear-test-parallel.sh [query] [ref-list] [out-dir] [path-to-mauve]
 
    [mandatory]
    query	A closed genome sequence in Genbank(.gbk) or Fasta(.fasta) format.
    ref-list	List of paths to set of reference genomes in Genbank(.gbk) or Fasta(.fasta) format.
    out-dir	Path to the new output dir
-   sw   value of --seed-weight parameter to progressiveMauve
-   hmm  value of --hmm-identity parameter to pprogressiveMauve
+
+   [optional]
+   progressiveMauve   Full path to your progressiveMauve executable if not in \$PATH
 
    [dependencies]
    progressiveMauve
@@ -20,6 +21,14 @@ if [[ "$1" == "" || "$1" == "-h" || "$1" == "-help" ]] ; then
    " >&2 ;
    exit 1 ;
 fi ;
+
+#where's your mauve?
+if [[ "$4" == "" ]] ; then
+  type progressiveMauve >/dev/null 2>&1 || { echo -e >&2 "\nERROR: Please indicate the full path to progressiveMauve. Run './colinear-test-parallel.sh -h' for details\n"; exit 1;}
+else
+  type $4 >/dev/null 2>&1 || { echo -e >&2 "\nERROR: '$4' not found. Please indicate the full path to progressiveMauve. Run './colinear-test-parallel.sh -h' for details\n"; exit 1;}
+fi
+
 
 ## Define function for performing pairwise mauve alignments.
 function collinear {
@@ -50,9 +59,7 @@ function collinear {
 
 	date > $log;
 	echo >> $log;
-  #~/Tools/mauve_2.4.0b/linux-x64/progressiveMauve --output=$out --seed-weight=16 --hmm-identity=0.85 $td/$(basename $1) $td/$(basename $2) >> $log;
-  ~/Tools/mauve_2.4.0b/linux-x64/progressiveMauve --output=$out --seed-weight=$4 --hmm-identity=$5 $td/$(basename $1) $td/$(basename $2) >> $log;
-  #echo ~/Tools/mauve_2.4.0b/linux-x64/progressiveMauve --output=$out --seed-weight=$4 --hmm-identity=$5 $td/$(basename $1) $td/$(basename $2) >> $log;
+	$mymauve --output=$out --seed-weight=16 --hmm-identity=0.85 $td/$(basename $1) $td/$(basename $2) >> $log;
 
   #correct file paths in xmfa
   prev1="$td/$(basename $1)";
@@ -76,9 +83,7 @@ outdir=$3;
 if [ ! -d "$outdir" ]; then
 	mkdir $outdir;
 fi
-	mapfile -t refs < $reflist;
-	#parallel -j 12 -k echo $genome {} $outdir ::: ${refs[@]};
-	parallel -j 12 -k collinear $genome {} $outdir $4 $5 ::: ${refs[@]};
-#else
-#	echo -e "\nERROR: Directory '$outdir' already exists!\n";
-#fi
+
+mapfile -t refs < $reflist;
+#parallel -j 12 -k echo $genome {} $outdir ::: ${refs[@]};
+parallel -j 12 -k collinear $genome {} $outdir ::: ${refs[@]};
