@@ -10,9 +10,9 @@ if [[ "$1" == "" || "$1" == "-h" || "$1" == "-help" ]] ; then
    query	A closed genome sequence in Genbank(.gbk) or Fasta(.fasta) format.
    ref-list	List of paths to set of reference genomes in Genbank(.gbk) or Fasta(.fasta) format.
    out-dir	Path to the new output dir
+   progressiveMauve   Full path to your progressiveMauve executable
 
    [optional]
-   progressiveMauve   Full path to your progressiveMauve executable if not in \$PATH
 
    [dependencies]
    progressiveMauve
@@ -22,13 +22,16 @@ if [[ "$1" == "" || "$1" == "-h" || "$1" == "-help" ]] ; then
    exit 1 ;
 fi ;
 
+#echo -e "\n\n$4\n\n";
+
 #where's your mauve?
 if [[ "$4" == "" ]] ; then
-  type progressiveMauve >/dev/null 2>&1 || { echo -e >&2 "\nERROR: Please indicate the full path to progressiveMauve. Run './colinear-test-parallel.sh -h' for details\n"; exit 1;}
+  type progressiveMauve >/dev/null 2>&1 || { echo -e >&2 "\nERROR: Please indicate the full path to progressiveMauve. Run './pairwise-mauve-parallel.sh -h' for details\n"; exit 1;}
+  mymauve="progressiveMauve";
 else
-  type $4 >/dev/null 2>&1 || { echo -e >&2 "\nERROR: '$4' not found. Please indicate the full path to progressiveMauve. Run './colinear-test-parallel.sh -h' for details\n"; exit 1;}
+  type $4 >/dev/null 2>&1 || { echo -e >&2 "\nERROR: '$4' not found. Please indicate the full path to progressiveMauve. Run './pairwise-mauve-parallel.sh -h' for details\n"; exit 1;}
+  mymauve=$4;
 fi
-
 
 ## Define function for performing pairwise mauve alignments.
 function collinear {
@@ -59,7 +62,9 @@ function collinear {
 
 	date > $log;
 	echo >> $log;
-	$mymauve --output=$out --seed-weight=16 --hmm-identity=0.85 $td/$(basename $1) $td/$(basename $2) >> $log;
+
+  runit=$("$4" --output=$out --seed-weight=16 --hmm-identity=0.85 $td/$(basename $1) $td/$(basename $2) >> $log);
+  #"${runit[@]}"
 
   #correct file paths in xmfa
   prev1="$td/$(basename $1)";
@@ -86,4 +91,4 @@ fi
 
 mapfile -t refs < $reflist;
 #parallel -j 12 -k echo $genome {} $outdir ::: ${refs[@]};
-parallel -j 12 -k collinear $genome {} $outdir ::: ${refs[@]};
+parallel -j 12 -k collinear $genome {} $outdir $mymauve ::: ${refs[@]};
